@@ -7,66 +7,33 @@
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
-    <main class="shell">
-      <section class="workspace">
+    <main class="app-shell">
+      <aside class="nav">
+        <div class="brand">
+          <p>多 Agent 项目知识工作台</p>
+          <h1>AI 项目 Agent</h1>
+        </div>
+        <nav class="nav-list" aria-label="主导航">
+          <button class="nav-button active" type="button" data-view="dashboard">总览</button>
+          <button class="nav-button" type="button" data-view="documents">资料</button>
+          <button class="nav-button" type="button" data-view="tasks">任务</button>
+          <button class="nav-button" type="button" data-view="risks">风险</button>
+          <button class="nav-button" type="button" data-view="qa">问答</button>
+          <button class="nav-button" type="button" data-view="briefs">简报</button>
+          <button class="nav-button" type="button" data-view="runs">运行轨迹</button>
+        </nav>
+      </aside>
+
+      <section class="content">
         <header class="topbar">
           <div>
-            <p class="eyebrow">多 Agent 项目知识工作台</p>
-            <h1>AI 项目执行 Agent</h1>
+            <p class="eyebrow" id="viewEyebrow">Dashboard</p>
+            <h2 id="viewTitle">项目总览</h2>
           </div>
           <div class="metrics" id="metrics"></div>
         </header>
-
-        <section class="panel composer">
-          <div class="panel-header">
-            <div>
-              <h2>添加项目资料</h2>
-              <p>粘贴会议记录、代码说明、需求文档或待办事项。</p>
-            </div>
-            <button id="sampleButton" type="button">载入示例</button>
-          </div>
-          <input id="titleInput" placeholder="资料标题" />
-          <textarea id="contentInput" rows="9" placeholder="目标：完成 MVP&#10;风险：模型 token 额度尚未确认&#10;待办：准备 GitHub 演示项目"></textarea>
-          <div class="actions">
-            <button id="ingestButton" type="button">运行 Agent</button>
-            <button id="resetButton" type="button" class="ghost">重置记忆</button>
-          </div>
-        </section>
-
-        <section class="grid">
-          <article class="panel">
-            <h2>目标</h2>
-            <ul id="goalsList"></ul>
-          </article>
-          <article class="panel">
-            <h2>进度</h2>
-            <ul id="progressList"></ul>
-          </article>
-          <article class="panel">
-            <h2>风险</h2>
-            <ul id="risksList"></ul>
-          </article>
-          <article class="panel">
-            <h2>待办</h2>
-            <ul id="todosList"></ul>
-          </article>
-        </section>
+        <section id="viewRoot" class="view"></section>
       </section>
-
-      <aside class="side">
-        <section class="panel">
-          <h2>询问项目</h2>
-          <textarea id="questionInput" rows="4" placeholder="目前最大的风险是什么？"></textarea>
-          <button id="askButton" type="button">提问</button>
-          <pre id="answerBox">请先上传资料或载入示例，然后向项目知识库提问。</pre>
-          <div id="sourceList" class="sources"></div>
-        </section>
-
-        <section class="panel">
-          <h2>Agent 执行轨迹</h2>
-          <div id="agentTrace" class="trace"></div>
-        </section>
-      </aside>
     </main>
 
     <script type="module" src="/app.js"></script>

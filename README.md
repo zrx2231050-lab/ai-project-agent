@@ -53,6 +53,7 @@ src/
 - Run a four-stage agent pipeline with parser, planner, executor, and reviewer outputs.
 - Review generated recommendations with confidence scores, unsupported terms, and grounding checks.
 - Export a generated project brief from the current knowledge base.
+- Use a product-style workspace with dashboard, documents, tasks, risks, Q&A, briefs, and agent runs.
 
 ## Quick Start
 
