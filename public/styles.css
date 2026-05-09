@@ -146,6 +146,10 @@ h2 {
   margin-top: 4px;
 }
 
+.muted {
+  color: var(--muted);
+}
+
 .composer {
   display: grid;
   gap: 12px;
@@ -192,6 +196,30 @@ pre {
 .trace {
   display: grid;
   gap: 10px;
+}
+
+.sources {
+  display: grid;
+  gap: 10px;
+}
+
+.source-item {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: grid;
+  gap: 6px;
+  padding: 10px;
+}
+
+.source-item span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.source-item p {
+  color: var(--ink);
+  line-height: 1.45;
+  margin: 0;
 }
 
 summary {

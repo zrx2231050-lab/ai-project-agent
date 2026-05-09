@@ -1,4 +1,4 @@
-import { cleanLine, extractEntities, stripLeadingLabel, uniqueList } from "../utils/text.js";
+import { cleanLine, extractEntities, snippetText, stripLeadingLabel, uniqueList } from "../utils/text.js";
 
 const PATTERNS = {
   goals: /\b(goal|objective|target|aim)\b|目标|目的|愿景|要解决/i,
@@ -35,7 +35,7 @@ export class DocumentParserAgent {
     };
 
     source.snippets.forEach((snippet, index) => {
-      const cleaned = cleanLine(snippet);
+      const cleaned = cleanLine(snippetText(snippet));
       if (!cleaned) return;
       extraction.facts.push(cleaned);
 

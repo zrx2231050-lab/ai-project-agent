@@ -18,7 +18,7 @@ flowchart LR
 - `server.js` exposes the HTTP API and static web app.
 - `src/agents/` contains individual agent implementations.
 - `src/workflows/` orchestrates agent execution and brief generation.
-- `src/rag/` handles retrieval and question answering.
+- `src/rag/` handles document chunking, retrieval, intent detection, and grounded question answering.
 - `src/storage/` persists project state.
 - `src/domain/` defines state creation and schema documentation.
 - `src/llm/` reserves a provider interface for future model calls.

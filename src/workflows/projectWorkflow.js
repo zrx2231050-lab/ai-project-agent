@@ -3,7 +3,8 @@ import { ExecutionAgent } from "../agents/ExecutionAgent.js";
 import { PlanningAgent } from "../agents/PlanningAgent.js";
 import { ReviewAgent } from "../agents/ReviewAgent.js";
 import { normalizeSourceDocument } from "../domain/state.js";
-import { splitIntoSnippets, uniqueList } from "../utils/text.js";
+import { buildSourceSnippets } from "../rag/chunker.js";
+import { uniqueList } from "../utils/text.js";
 
 export class ProjectWorkflow {
   constructor({
@@ -59,7 +60,7 @@ export function runAgentPipeline(state, sourceInput) {
 function withSnippets(source) {
   return {
     ...source,
-    snippets: splitIntoSnippets(source.content)
+    snippets: buildSourceSnippets(source.content, { sourceId: source.id })
   };
 }
 

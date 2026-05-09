@@ -48,6 +48,8 @@ src/
 - Convert extracted todos into prioritized task items and risks into severity-scored mitigation items.
 - Update a persistent project state after every new source.
 - Ask RAG-style questions and get answers with supporting snippets.
+- Retrieve evidence with source title, chunk heading, line range, score, and answer confidence.
+- Say clearly when the current material does not contain enough evidence.
 - Run a four-stage agent pipeline with parser, planner, executor, and reviewer outputs.
 - Review generated recommendations with confidence scores, unsupported terms, and grounding checks.
 - Export a generated project brief from the current knowledge base.

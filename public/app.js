@@ -20,6 +20,7 @@ const els = {
   content: document.querySelector("#contentInput"),
   question: document.querySelector("#questionInput"),
   answer: document.querySelector("#answerBox"),
+  sources: document.querySelector("#sourceList"),
   trace: document.querySelector("#agentTrace"),
   metrics: document.querySelector("#metrics"),
   goals: document.querySelector("#goalsList"),
@@ -46,15 +47,15 @@ document.querySelector("#askButton").addEventListener("click", async () => {
   const result = await postJson("/api/ask", {
     question: els.question.value || "下一步应该做什么？"
   });
-  els.answer.textContent = `${result.answer}\n\n引用来源：\n${result.sources
-    .map((source) => `- ${source.sourceTitle}：${source.snippet}`)
-    .join("\n")}`;
+  els.answer.textContent = `${result.answer}\n\n置信度：${Math.round(result.confidence * 100)}%`;
+  renderSources(result.sources || []);
 });
 
 document.querySelector("#resetButton").addEventListener("click", async () => {
   const state = await postJson("/api/reset", {});
   renderState(state);
   els.trace.innerHTML = "";
+  els.sources.innerHTML = "";
   els.answer.textContent = "记忆已重置。请添加新资料以重新运行 Agent 工作流。";
 });
 
@@ -102,7 +103,6 @@ function renderList(target, items) {
 }
 
 function renderTaskList(target, state) {
-  target.innerHTML = "";
   const tasks = state.taskItems?.length
     ? state.taskItems.map((task) => `${priorityLabel(task.priority)} ${task.text}`)
     : state.todos;
@@ -110,11 +110,29 @@ function renderTaskList(target, state) {
 }
 
 function renderRiskList(target, state) {
-  target.innerHTML = "";
   const risks = state.riskItems?.length
     ? state.riskItems.map((risk) => `${severityLabel(risk.severity)} ${risk.text}；缓解：${risk.mitigation}`)
     : state.risks;
   renderList(target, risks);
+}
+
+function renderSources(sources) {
+  if (!sources.length) {
+    els.sources.innerHTML = '<p class="muted">暂无可引用来源。</p>';
+    return;
+  }
+
+  els.sources.innerHTML = sources
+    .map(
+      (source) => `
+        <article class="source-item">
+          <strong>${escapeHtml(source.sourceTitle)}</strong>
+          <span>${escapeHtml(source.heading || "正文")} ${formatLines(source)}</span>
+          <p>${escapeHtml(source.snippet)}</p>
+        </article>
+      `
+    )
+    .join("");
 }
 
 function renderTrace(agents) {
@@ -152,8 +170,13 @@ function severityLabel(severity) {
   }[severity] || "";
 }
 
+function formatLines(source) {
+  if (!source.startLine) return "";
+  return `第 ${source.startLine}-${source.endLine} 行`;
+}
+
 function escapeHtml(value) {
-  return value.replace(/[&<>"']/g, (char) => {
+  return String(value || "").replace(/[&<>"']/g, (char) => {
     return {
       "&": "&amp;",
       "<": "&lt;",

@@ -11,8 +11,17 @@ export const domainSchemas = {
     title: "string",
     type: "text | markdown | transcript | code-note",
     content: "string",
-    snippets: "Snippet[]",
+    snippets: "SourceSnippet[]",
     createdAt: "ISO timestamp"
+  },
+  SourceSnippet: {
+    id: "string",
+    index: "number",
+    heading: "string",
+    text: "string",
+    startLine: "number",
+    endLine: "number",
+    tokens: "string[]"
   },
   ExtractedFact: {
     id: "string",
