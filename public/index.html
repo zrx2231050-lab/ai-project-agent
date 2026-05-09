@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI Project Agent</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="workspace">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Multi-Agent Knowledge Workspace</p>
+            <h1>AI Project Agent</h1>
+          </div>
+          <div class="metrics" id="metrics"></div>
+        </header>
+
+        <section class="panel composer">
+          <div class="panel-header">
+            <div>
+              <h2>Add project material</h2>
+              <p>Paste meeting notes, code context, requirements, or todos.</p>
+            </div>
+            <button id="sampleButton" type="button">Load sample</button>
+          </div>
+          <input id="titleInput" placeholder="Source title" />
+          <textarea id="contentInput" rows="9" placeholder="Goal: ship MVP&#10;Risk: token quota is unknown&#10;Todo: prepare GitHub demo"></textarea>
+          <div class="actions">
+            <button id="ingestButton" type="button">Run agents</button>
+            <button id="resetButton" type="button" class="ghost">Reset memory</button>
+          </div>
+        </section>
+
+        <section class="grid">
+          <article class="panel">
+            <h2>Goals</h2>
+            <ul id="goalsList"></ul>
+          </article>
+          <article class="panel">
+            <h2>Progress</h2>
+            <ul id="progressList"></ul>
+          </article>
+          <article class="panel">
+            <h2>Risks</h2>
+            <ul id="risksList"></ul>
+          </article>
+          <article class="panel">
+            <h2>Todos</h2>
+            <ul id="todosList"></ul>
+          </article>
+        </section>
+      </section>
+
+      <aside class="side">
+        <section class="panel">
+          <h2>Ask the project</h2>
+          <textarea id="questionInput" rows="4" placeholder="What are the main risks?"></textarea>
+          <button id="askButton" type="button">Ask</button>
+          <pre id="answerBox">Upload material or load the sample, then ask a question.</pre>
+        </section>
+
+        <section class="panel">
+          <h2>Agent trace</h2>
+          <div id="agentTrace" class="trace"></div>
+        </section>
+      </aside>
+    </main>
+
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>
