@@ -1,21 +1,14 @@
 # AI Project Agent
 
-AI Project Agent is a runnable prototype for an AI-driven personal knowledge management and project execution assistant. It helps users turn scattered documents, code notes, meeting records, and todos into a living project state.
+AI Project Agent is a runnable prototype for an AI-driven personal knowledge management and project execution assistant. It turns scattered project documents, code notes, meeting records, risks, and todos into a structured project state with multi-agent reasoning and RAG citations.
 
-The prototype demonstrates a four-agent workflow:
+The project is built for review without any model token, while keeping a Xiaomi-compatible model provider boundary for future token usage.
 
-- **Document Parser Agent** extracts facts, goals, progress, risks, todos, and entities from uploaded material.
-- **Planning Agent** converts facts into concrete next actions and prioritizes the project backlog.
-- **Execution Agent** drafts project briefs, meeting notes, code-oriented suggestions, and action recommendations.
-- **Review Agent** checks whether generated output is grounded in the original source snippets.
-
-It also includes a lightweight retrieval layer for question answering. The current implementation is dependency-free and runs locally, so reviewers can try the full flow without requiring an API key. A future version can replace the heuristic agent functions with Xiaomi-compatible model calls through the provider boundary in `src/llm/`.
-
-## Why This Project
+## Core Value
 
 Project context often lives across chat logs, markdown files, source code, issue trackers, meeting notes, and personal todos. Manual organization is repetitive and error-prone. This agent keeps project memory current by processing each new material, updating structured state, and answering questions with traceable source snippets.
 
-## Architecture
+## Agent Workflow
 
 ```mermaid
 flowchart LR
@@ -28,32 +21,20 @@ flowchart LR
   G --> H[Grounded Q&A]
 ```
 
-## Project Structure
-
-```text
-src/
-  agents/       Four agent implementations
-  domain/       Project state and schema definitions
-  llm/          Future model provider interface
-  rag/          Retrieval and grounded Q&A
-  storage/      Local state persistence
-  workflows/    Multi-agent orchestration and brief generation
-  utils/        Shared text helpers
-```
+- **Document Parser Agent** extracts facts, goals, progress, risks, todos, decisions, and entities.
+- **Planning Agent** converts facts into prioritized task items and identifies blockers.
+- **Execution Agent** drafts project briefs, action recommendations, and deliverables.
+- **Review Agent** checks grounding, confidence, unsupported terms, and risk awareness.
 
 ## Features
 
-- Upload or paste project materials from the browser.
-- Automatically extract project goals, current progress, risks, todos, decisions, and key entities.
-- Convert extracted todos into prioritized task items and risks into severity-scored mitigation items.
-- Update a persistent project state after every new source.
-- Ask RAG-style questions and get answers with supporting snippets.
-- Retrieve evidence with source title, chunk heading, line range, score, and answer confidence.
-- Say clearly when the current material does not contain enough evidence.
-- Run a four-stage agent pipeline with parser, planner, executor, and reviewer outputs.
-- Review generated recommendations with confidence scores, unsupported terms, and grounding checks.
-- Export a generated project brief from the current knowledge base.
-- Use a product-style workspace with dashboard, documents, tasks, risks, Q&A, briefs, and agent runs.
+- Chinese product workspace with dashboard, documents, tasks, risks, Q&A, briefs, and agent runs.
+- Local-first multi-agent workflow that runs without credentials.
+- Structured project memory: facts, tasks, risks, decisions, briefs, and run history.
+- RAG question answering with source title, chunk heading, line range, score, and confidence.
+- Clear insufficient-evidence behavior when uploaded material cannot answer a question.
+- Xiaomi-compatible provider layer with model fallback metadata.
+- Focused smoke tests using Node.js built-in assertions.
 
 ## Quick Start
 
@@ -61,19 +42,19 @@ src/
 npm start
 ```
 
-Then open:
+Open:
 
 ```text
 http://localhost:3000
 ```
 
-Run the command-line demo:
+Run the demo:
 
 ```bash
 npm run demo
 ```
 
-Run a smoke test:
+Run tests:
 
 ```bash
 npm test
@@ -88,27 +69,6 @@ POST /api/ask
 GET /api/brief
 POST /api/reset
 ```
-
-## Model Integration Plan
-
-Copy `.env.example` to `.env` after token access is approved:
-
-```bash
-XIAOMI_API_KEY=your_token
-XIAOMI_BASE_URL=https://api.example.com
-XIAOMI_MODEL=model_name
-LLM_PROVIDER=xiaomi
-```
-
-The current code keeps this as a planned integration point, so the prototype remains runnable for review without credentials.
-
-When `LLM_ENABLED=true`, the execution agent will attempt a structured model call and automatically fall back to local rules if the provider is unavailable.
-
-## Documentation
-
-- [Architecture](docs/architecture.md)
-- [Agent workflow](docs/agent-workflow.md)
-- [Model integration](docs/model-integration.md)
 
 Example ingest payload:
 
@@ -127,13 +87,53 @@ Example ask payload:
 }
 ```
 
-## Roadmap
+## Model Integration
 
-- Add Xiaomi model integration for structured extraction and answer generation.
-- Support PDFs, Word documents, GitHub repositories, and meeting transcript imports.
-- Add embedding-based retrieval and reranking.
-- Add a human approval queue for risky actions.
-- Add multi-project workspaces and scheduled project health checks.
+The app defaults to local deterministic behavior. After token access is approved, copy `.env.example` to `.env` and configure:
+
+```bash
+XIAOMI_API_KEY=your_token
+XIAOMI_BASE_URL=https://api.example.com/v1
+XIAOMI_MODEL=model_name
+LLM_PROVIDER=xiaomi
+LLM_ENABLED=true
+```
+
+When `LLM_ENABLED=true`, the execution agent attempts a structured model call. If the provider is unavailable, misconfigured, or returns non-JSON content, the workflow records the fallback reason and continues with local rules.
+
+## Project Structure
+
+```text
+src/
+  agents/       Four agent implementations
+  domain/       Project state and schema definitions
+  llm/          Mock and Xiaomi-compatible model providers
+  rag/          Chunking, retrieval, intent detection, and grounded Q&A
+  storage/      Local state persistence
+  tests/        Focused smoke tests
+  workflows/    Multi-agent orchestration and brief generation
+  utils/        Shared text helpers
+```
+
+## Documentation
+
+- [Architecture](docs/architecture.md)
+- [Agent workflow](docs/agent-workflow.md)
+- [RAG design](docs/rag.md)
+- [Frontend workspace](docs/frontend.md)
+- [Model integration](docs/model-integration.md)
+- [Testing](docs/testing.md)
+- [Roadmap](docs/roadmap.md)
+- [Application note](docs/application-note.md)
+
+## Token Usage Plan
+
+Free Xiaomi model quota will be used for:
+
+- Higher quality document parsing and structured fact extraction.
+- Multi-step planning with clearer priorities, dependencies, and blockers.
+- Execution drafts such as project briefs, meeting minutes, and action plans.
+- Review Agent checks for grounding, unsupported claims, and hallucination risk.
 
 ## License
 
