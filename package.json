@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node server.js",
     "demo": "node src/demo.js",
-    "test": "node src/demo.js --assert"
+    "test": "node src/demo.js --assert && node src/llm/smoke.js"
   },
   "keywords": [
     "agent",

@@ -5,9 +5,9 @@ const meeting = await readFile(new URL("../examples/meeting-notes.md", import.me
 const repo = await readFile(new URL("../examples/code-repo-note.md", import.meta.url), "utf8");
 
 let state = createInitialState();
-let result = runAgentPipeline(state, { title: "Meeting notes", content: meeting });
+let result = await runAgentPipeline(state, { title: "Meeting notes", content: meeting });
 state = result.state;
-result = runAgentPipeline(state, { title: "Repository note", content: repo });
+result = await runAgentPipeline(state, { title: "Repository note", content: repo });
 state = result.state;
 
 const answer = answerQuestion(state, "What are the main risks and next todos?");

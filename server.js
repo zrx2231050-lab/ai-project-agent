@@ -28,7 +28,7 @@ const server = createServer(async (request, response) => {
     if (url.pathname === "/api/ingest" && request.method === "POST") {
       const body = await readJson(request);
       const state = await loadState();
-      const result = runAgentPipeline(state, body);
+      const result = await runAgentPipeline(state, body);
       await saveState(result.state);
       return sendJson(response, result);
     }

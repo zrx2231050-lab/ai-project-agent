@@ -3,29 +3,35 @@ import { ExecutionAgent } from "../agents/ExecutionAgent.js";
 import { PlanningAgent } from "../agents/PlanningAgent.js";
 import { ReviewAgent } from "../agents/ReviewAgent.js";
 import { normalizeSourceDocument } from "../domain/state.js";
+import { LLMClient } from "../llm/LLMClient.js";
+import { isLLMEnabled } from "../llm/config.js";
 import { buildSourceSnippets } from "../rag/chunker.js";
 import { uniqueList } from "../utils/text.js";
 
 export class ProjectWorkflow {
   constructor({
+    llm = new LLMClient(),
+    enableLLM = isLLMEnabled(),
     parser = new DocumentParserAgent(),
     planner = new PlanningAgent(),
-    executor = new ExecutionAgent(),
+    executor = new ExecutionAgent({ llm, enableLLM }),
     reviewer = new ReviewAgent()
   } = {}) {
+    this.llm = llm;
+    this.enableLLM = enableLLM;
     this.parser = parser;
     this.planner = planner;
     this.executor = executor;
     this.reviewer = reviewer;
   }
 
-  ingest(state, sourceInput) {
+  async ingest(state, sourceInput) {
     const source = withSnippets(normalizeSourceDocument(sourceInput));
-    const parsed = this.parser.run(source);
+    const parsed = await this.parser.run(source);
     const nextState = mergeExtraction(state, source, parsed);
-    const plan = this.planner.run(nextState);
-    const execution = this.executor.run(nextState, plan);
-    const review = this.reviewer.run(source, parsed, execution);
+    const plan = await this.planner.run(nextState);
+    const execution = await this.executor.run(nextState, plan);
+    const review = await this.reviewer.run(source, parsed, execution);
     const run = {
       id: `run-${Date.now()}`,
       sourceId: source.id,

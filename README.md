@@ -102,6 +102,8 @@ LLM_PROVIDER=xiaomi
 
 The current code keeps this as a planned integration point, so the prototype remains runnable for review without credentials.
 
+When `LLM_ENABLED=true`, the execution agent will attempt a structured model call and automatically fall back to local rules if the provider is unavailable.
+
 ## Documentation
 
 - [Architecture](docs/architecture.md)

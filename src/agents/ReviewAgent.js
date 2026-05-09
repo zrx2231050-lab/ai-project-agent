@@ -1,7 +1,7 @@
 import { STOP_WORDS, tokenize, uniqueList } from "../utils/text.js";
 
 export class ReviewAgent {
-  run(source, parsed, execution) {
+  async run(source, parsed, execution) {
     const sourceTerms = new Set(tokenize(source.content));
     const generatedText = [execution.summary, execution.recommendation?.nextAction, execution.recommendation?.topRisk]
       .filter(Boolean)

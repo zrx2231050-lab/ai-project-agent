@@ -1,5 +1,5 @@
 export class PlanningAgent {
-  run(state) {
+  async run(state) {
     const sourceTasks = (state.taskItems || []).length
       ? state.taskItems
       : state.todos.map((text, index) => ({

@@ -19,7 +19,7 @@ const PRIORITY_PATTERNS = {
 };
 
 export class DocumentParserAgent {
-  run(source) {
+  async run(source) {
     const extraction = {
       goals: [],
       progress: [],
