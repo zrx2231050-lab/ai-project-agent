@@ -9,11 +9,37 @@ The prototype demonstrates a four-agent workflow:
 - **Execution Agent** drafts project briefs, meeting notes, code-oriented suggestions, and action recommendations.
 - **Review Agent** checks whether generated output is grounded in the original source snippets.
 
-It also includes a lightweight retrieval layer for question answering. The current implementation is dependency-free and runs locally, so reviewers can try the full flow without requiring an API key. A future version can replace the heuristic agent functions with Xiaomi/OpenAI-compatible model calls.
+It also includes a lightweight retrieval layer for question answering. The current implementation is dependency-free and runs locally, so reviewers can try the full flow without requiring an API key. A future version can replace the heuristic agent functions with Xiaomi-compatible model calls through the provider boundary in `src/llm/`.
 
 ## Why This Project
 
-Project context often lives across chat logs, markdown files, source code, issue trackers, meeting notes, and personal todos. Manual整理 is repetitive and error-prone. This agent keeps project memory current by processing each new material, updating structured state, and answering questions with traceable source snippets.
+Project context often lives across chat logs, markdown files, source code, issue trackers, meeting notes, and personal todos. Manual organization is repetitive and error-prone. This agent keeps project memory current by processing each new material, updating structured state, and answering questions with traceable source snippets.
+
+## Architecture
+
+```mermaid
+flowchart LR
+  A[Source material] --> B[DocumentParserAgent]
+  B --> C[Project state]
+  C --> D[PlanningAgent]
+  D --> E[ExecutionAgent]
+  E --> F[ReviewAgent]
+  C --> G[RAG retriever]
+  G --> H[Grounded Q&A]
+```
+
+## Project Structure
+
+```text
+src/
+  agents/       Four agent implementations
+  domain/       Project state and schema definitions
+  llm/          Future model provider interface
+  rag/          Retrieval and grounded Q&A
+  storage/      Local state persistence
+  workflows/    Multi-agent orchestration and brief generation
+  utils/        Shared text helpers
+```
 
 ## Features
 
@@ -54,8 +80,28 @@ npm test
 GET /api/state
 POST /api/ingest
 POST /api/ask
+GET /api/brief
 POST /api/reset
 ```
+
+## Model Integration Plan
+
+Copy `.env.example` to `.env` after token access is approved:
+
+```bash
+XIAOMI_API_KEY=your_token
+XIAOMI_BASE_URL=https://api.example.com
+XIAOMI_MODEL=model_name
+LLM_PROVIDER=xiaomi
+```
+
+The current code keeps this as a planned integration point, so the prototype remains runnable for review without credentials.
+
+## Documentation
+
+- [Architecture](docs/architecture.md)
+- [Agent workflow](docs/agent-workflow.md)
+- [Model integration](docs/model-integration.md)
 
 Example ingest payload:
 
