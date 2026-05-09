@@ -35,6 +35,14 @@ export const domainSchemas = {
     mitigation: "string",
     sourceId: "string"
   },
+  AgentPlan: {
+    priority: "focus-risk-first | continue-execution",
+    actions: "string[]",
+    tasks: "TaskItem[]",
+    blockers: "TaskItem[]",
+    nextMilestone: "string",
+    rationale: "string"
+  },
   AgentRun: {
     id: "string",
     sourceId: "string",

@@ -82,10 +82,23 @@ function mergeExtraction(state, source, parsed) {
     goals: uniqueList([...state.goals, ...parsed.goals]),
     progress: uniqueList([...state.progress, ...parsed.progress]),
     risks: uniqueList([...state.risks, ...parsed.risks]),
+    riskItems: uniqueByText([...(state.riskItems || []), ...parsed.riskItems]),
     todos: uniqueList([...state.todos, ...parsed.todos]),
+    taskItems: uniqueByText([...(state.taskItems || []), ...parsed.taskItems]),
     decisions: uniqueList([...state.decisions, ...parsed.decisions]),
-    entities: uniqueList([...state.entities, ...parsed.entities])
+    entities: uniqueList([...state.entities, ...parsed.entities]),
+    facts: uniqueByText([...(state.facts || []), ...parsed.structuredFacts])
   };
+}
+
+function uniqueByText(items) {
+  const seen = new Set();
+  return items.filter((item) => {
+    const key = String(item.text || "").toLowerCase();
+    if (!key || seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 }
 
 function toBrief(run) {

@@ -31,6 +31,9 @@ function migrateState(state) {
     ...state,
     version: 1,
     projects: state.projects || [],
+    facts: state.facts || [],
+    taskItems: state.taskItems || [],
+    riskItems: state.riskItems || [],
     agentRuns: state.agentRuns || []
   };
 }

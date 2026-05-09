@@ -1,19 +1,19 @@
-const sample = `Goal: build an AI-driven personal knowledge management and project execution agent.
+const sample = `目标：构建一个 AI 驱动的个人知识管理与项目执行 Agent。
 
-Current progress:
-- Initial scope is defined.
-- The prototype should support project notes, repository descriptions, and meeting summaries.
+当前进度：
+- 初始范围已经明确。
+- 原型需要支持项目笔记、代码仓库说明和会议纪要。
 
-Risks:
-- Model token quota is not confirmed yet.
-- Users may upload fragmented notes with inconsistent wording.
+风险：
+- 模型 token 免费额度尚未确认。
+- 用户上传的资料可能比较碎片化，表述也不完全一致。
 
-Todos:
-- Create a GitHub repository for the prototype.
-- Implement document parsing, planning, execution, and review agents.
-- Prepare a concise demo for the application form.
+待办：
+- 创建 GitHub 原型仓库。
+- 实现文档解析、规划、执行和审核 Agent。
+- 为申请表准备一个简洁的演示项目。
 
-Decision: keep the first version local-first and dependency-light.`;
+决策：第一版保持本地优先和轻依赖。`;
 
 const els = {
   title: document.querySelector("#titleInput"),
@@ -29,13 +29,13 @@ const els = {
 };
 
 document.querySelector("#sampleButton").addEventListener("click", () => {
-  els.title.value = "Kickoff meeting notes";
+  els.title.value = "项目启动会议记录";
   els.content.value = sample;
 });
 
 document.querySelector("#ingestButton").addEventListener("click", async () => {
   const result = await postJson("/api/ingest", {
-    title: els.title.value || "Untitled source",
+    title: els.title.value || "未命名资料",
     content: els.content.value
   });
   renderState(result.state);
@@ -44,10 +44,10 @@ document.querySelector("#ingestButton").addEventListener("click", async () => {
 
 document.querySelector("#askButton").addEventListener("click", async () => {
   const result = await postJson("/api/ask", {
-    question: els.question.value || "What should I do next?"
+    question: els.question.value || "下一步应该做什么？"
   });
-  els.answer.textContent = `${result.answer}\n\nSources:\n${result.sources
-    .map((source) => `- ${source.sourceTitle}: ${source.snippet}`)
+  els.answer.textContent = `${result.answer}\n\n引用来源：\n${result.sources
+    .map((source) => `- ${source.sourceTitle}：${source.snippet}`)
     .join("\n")}`;
 });
 
@@ -55,7 +55,7 @@ document.querySelector("#resetButton").addEventListener("click", async () => {
   const state = await postJson("/api/reset", {});
   renderState(state);
   els.trace.innerHTML = "";
-  els.answer.textContent = "Memory reset. Add new material to restart the agent workflow.";
+  els.answer.textContent = "记忆已重置。请添加新资料以重新运行 Agent 工作流。";
 });
 
 loadState();
@@ -79,21 +79,21 @@ async function postJson(url, data) {
 
 function renderState(state) {
   els.metrics.innerHTML = [
-    ["Sources", state.sources.length],
-    ["Risks", state.risks.length],
-    ["Todos", state.todos.length]
+    ["资料", state.sources.length],
+    ["风险", state.risks.length],
+    ["待办", state.todos.length]
   ]
     .map(([label, value]) => `<span><strong>${value}</strong>${label}</span>`)
     .join("");
   renderList(els.goals, state.goals);
   renderList(els.progress, state.progress);
-  renderList(els.risks, state.risks);
-  renderList(els.todos, state.todos);
+  renderRiskList(els.risks, state);
+  renderTaskList(els.todos, state);
 }
 
 function renderList(target, items) {
   target.innerHTML = "";
-  const values = items.length ? items : ["No explicit item detected yet."];
+  const values = items.length ? items : ["暂未识别到明确内容。"];
   for (const item of values.slice(0, 8)) {
     const li = document.createElement("li");
     li.textContent = item;
@@ -101,17 +101,55 @@ function renderList(target, items) {
   }
 }
 
+function renderTaskList(target, state) {
+  target.innerHTML = "";
+  const tasks = state.taskItems?.length
+    ? state.taskItems.map((task) => `${priorityLabel(task.priority)} ${task.text}`)
+    : state.todos;
+  renderList(target, tasks);
+}
+
+function renderRiskList(target, state) {
+  target.innerHTML = "";
+  const risks = state.riskItems?.length
+    ? state.riskItems.map((risk) => `${severityLabel(risk.severity)} ${risk.text}；缓解：${risk.mitigation}`)
+    : state.risks;
+  renderList(target, risks);
+}
+
 function renderTrace(agents) {
+  const labels = {
+    parser: "文档解析 Agent",
+    planner: "规划 Agent",
+    executor: "执行 Agent",
+    reviewer: "审核 Agent"
+  };
   els.trace.innerHTML = Object.entries(agents)
     .map(
       ([name, payload]) => `
         <details open>
-          <summary>${name}</summary>
+          <summary>${labels[name] || name}</summary>
           <pre>${escapeHtml(JSON.stringify(payload, null, 2))}</pre>
         </details>
       `
     )
     .join("");
+}
+
+function priorityLabel(priority) {
+  return {
+    high: "高优先级：",
+    medium: "中优先级：",
+    low: "低优先级："
+  }[priority] || "";
+}
+
+function severityLabel(severity) {
+  return {
+    high: "高风险：",
+    medium: "中风险：",
+    low: "低风险："
+  }[severity] || "";
 }
 
 function escapeHtml(value) {

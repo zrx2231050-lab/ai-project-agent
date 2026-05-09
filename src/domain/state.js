@@ -7,9 +7,12 @@ export function createInitialState() {
     goals: [],
     progress: [],
     risks: [],
+    riskItems: [],
     todos: [],
+    taskItems: [],
     decisions: [],
     entities: [],
+    facts: [],
     agentRuns: [],
     briefs: []
   };

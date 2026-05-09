@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>AI Project Agent</title>
+    <title>AI 项目 Agent</title>
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
@@ -11,8 +11,8 @@
       <section class="workspace">
         <header class="topbar">
           <div>
-            <p class="eyebrow">Multi-Agent Knowledge Workspace</p>
-            <h1>AI Project Agent</h1>
+            <p class="eyebrow">多 Agent 项目知识工作台</p>
+            <h1>AI 项目执行 Agent</h1>
           </div>
           <div class="metrics" id="metrics"></div>
         </header>
@@ -20,34 +20,34 @@
         <section class="panel composer">
           <div class="panel-header">
             <div>
-              <h2>Add project material</h2>
-              <p>Paste meeting notes, code context, requirements, or todos.</p>
+              <h2>添加项目资料</h2>
+              <p>粘贴会议记录、代码说明、需求文档或待办事项。</p>
             </div>
-            <button id="sampleButton" type="button">Load sample</button>
+            <button id="sampleButton" type="button">载入示例</button>
           </div>
-          <input id="titleInput" placeholder="Source title" />
-          <textarea id="contentInput" rows="9" placeholder="Goal: ship MVP&#10;Risk: token quota is unknown&#10;Todo: prepare GitHub demo"></textarea>
+          <input id="titleInput" placeholder="资料标题" />
+          <textarea id="contentInput" rows="9" placeholder="目标：完成 MVP&#10;风险：模型 token 额度尚未确认&#10;待办：准备 GitHub 演示项目"></textarea>
           <div class="actions">
-            <button id="ingestButton" type="button">Run agents</button>
-            <button id="resetButton" type="button" class="ghost">Reset memory</button>
+            <button id="ingestButton" type="button">运行 Agent</button>
+            <button id="resetButton" type="button" class="ghost">重置记忆</button>
           </div>
         </section>
 
         <section class="grid">
           <article class="panel">
-            <h2>Goals</h2>
+            <h2>目标</h2>
             <ul id="goalsList"></ul>
           </article>
           <article class="panel">
-            <h2>Progress</h2>
+            <h2>进度</h2>
             <ul id="progressList"></ul>
           </article>
           <article class="panel">
-            <h2>Risks</h2>
+            <h2>风险</h2>
             <ul id="risksList"></ul>
           </article>
           <article class="panel">
-            <h2>Todos</h2>
+            <h2>待办</h2>
             <ul id="todosList"></ul>
           </article>
         </section>
@@ -55,14 +55,14 @@
 
       <aside class="side">
         <section class="panel">
-          <h2>Ask the project</h2>
-          <textarea id="questionInput" rows="4" placeholder="What are the main risks?"></textarea>
-          <button id="askButton" type="button">Ask</button>
-          <pre id="answerBox">Upload material or load the sample, then ask a question.</pre>
+          <h2>询问项目</h2>
+          <textarea id="questionInput" rows="4" placeholder="目前最大的风险是什么？"></textarea>
+          <button id="askButton" type="button">提问</button>
+          <pre id="answerBox">请先上传资料或载入示例，然后向项目知识库提问。</pre>
         </section>
 
         <section class="panel">
-          <h2>Agent trace</h2>
+          <h2>Agent 执行轨迹</h2>
           <div id="agentTrace" class="trace"></div>
         </section>
       </aside>

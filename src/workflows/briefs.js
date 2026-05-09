@@ -11,12 +11,26 @@ export function generateProjectBrief(state) {
     listOrEmpty(state.progress),
     "",
     "## Risks",
-    listOrEmpty(state.risks),
+    listOrEmpty(formatRisks(state)),
     "",
     "## Next Actions",
-    listOrEmpty(state.todos),
+    listOrEmpty(formatTasks(state)),
     "",
     "## Decisions",
     listOrEmpty(state.decisions)
   ].join("\n");
+}
+
+function formatTasks(state) {
+  if (state.taskItems?.length) {
+    return state.taskItems.map((task) => `[${task.priority}] ${task.text}`);
+  }
+  return state.todos;
+}
+
+function formatRisks(state) {
+  if (state.riskItems?.length) {
+    return state.riskItems.map((risk) => `[${risk.severity}] ${risk.text} Mitigation: ${risk.mitigation}`);
+  }
+  return state.risks;
 }
