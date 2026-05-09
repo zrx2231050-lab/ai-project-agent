@@ -29,6 +29,7 @@ flowchart LR
 ## Features
 
 - Chinese product workspace with dashboard, documents, tasks, risks, Q&A, briefs, and agent runs.
+- Import pasted text, Markdown/Text files, and Word `.docx` documents.
 - Local-first multi-agent workflow that runs without credentials.
 - Structured project memory: facts, tasks, risks, decisions, briefs, and run history.
 - RAG question answering with source title, chunk heading, line range, score, and confidence.
@@ -65,6 +66,7 @@ npm test
 ```http
 GET /api/state
 POST /api/ingest
+POST /api/ingest-file
 POST /api/ask
 GET /api/brief
 POST /api/reset
@@ -84,6 +86,15 @@ Example ask payload:
 ```json
 {
   "question": "What are the main risks?"
+}
+```
+
+Example file ingest payload:
+
+```json
+{
+  "filename": "project-note.docx",
+  "contentBase64": "base64-encoded-file"
 }
 ```
 
@@ -123,6 +134,7 @@ src/
 - [Frontend workspace](docs/frontend.md)
 - [Model integration](docs/model-integration.md)
 - [Testing](docs/testing.md)
+- [Document import](docs/document-import.md)
 - [Roadmap](docs/roadmap.md)
 - [Application note](docs/application-note.md)
 

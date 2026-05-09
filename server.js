@@ -4,6 +4,7 @@ import { createServer } from "node:http";
 import { extname, join, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
 import { answerQuestion, generateProjectBrief, runAgentPipeline } from "./src/agentPipeline.js";
+import { readUploadedDocument } from "./src/ingest/documentReaders.js";
 import { loadState, resetState, saveState } from "./src/storage.js";
 
 const PORT = Number(process.env.PORT || 3000);
@@ -31,6 +32,22 @@ const server = createServer(async (request, response) => {
       const result = await runAgentPipeline(state, body);
       await saveState(result.state);
       return sendJson(response, result);
+    }
+
+    if (url.pathname === "/api/ingest-file" && request.method === "POST") {
+      const body = await readJson(request);
+      const document = readUploadedDocument(body);
+      const state = await loadState();
+      const result = await runAgentPipeline(state, document);
+      await saveState(result.state);
+      return sendJson(response, {
+        ...result,
+        file: {
+          filename: body.filename,
+          type: document.type,
+          extractedCharacters: document.content.length
+        }
+      });
     }
 
     if (url.pathname === "/api/ask" && request.method === "POST") {

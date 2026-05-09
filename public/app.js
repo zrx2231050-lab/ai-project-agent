@@ -67,6 +67,23 @@ els.viewRoot.addEventListener("click", async (event) => {
     render();
   }
 
+  if (action === "ingest-file") {
+    const file = document.querySelector("#fileInput")?.files?.[0];
+    if (!file) {
+      alert("请先选择 .docx、.md 或 .txt 文件。");
+      return;
+    }
+    const result = await postJson("/api/ingest-file", {
+      filename: file.name,
+      contentBase64: await fileToBase64(file)
+    });
+    appState = result.state;
+    lastAgents = result.agents;
+    currentView = "dashboard";
+    setActiveNav();
+    render();
+  }
+
   if (action === "reset") {
     appState = await postJson("/api/reset", {});
     lastAgents = null;
@@ -104,6 +121,18 @@ async function postJson(url, data) {
   });
   if (!response.ok) throw new Error(await response.text());
   return response.json();
+}
+
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.addEventListener("load", () => {
+      const value = String(reader.result || "");
+      resolve(value.includes(",") ? value.split(",")[1] : value);
+    });
+    reader.addEventListener("error", () => reject(reader.error));
+    reader.readAsDataURL(file);
+  });
 }
 
 function render() {
@@ -172,6 +201,18 @@ function renderDocumentsView() {
       <div class="actions">
         <button type="button" data-action="ingest">运行 Agent</button>
         <button type="button" class="ghost" data-action="reset">重置记忆</button>
+      </div>
+    </section>
+    <section class="panel composer">
+      <div class="panel-header">
+        <div>
+          <h3>导入文件</h3>
+          <p>支持 Word 文档 .docx，以及 Markdown/Text 文件。导入后会自动提取文本并运行 Agent。</p>
+        </div>
+      </div>
+      <input id="fileInput" type="file" accept=".docx,.md,.markdown,.txt" />
+      <div class="actions">
+        <button type="button" data-action="ingest-file">导入文件并运行 Agent</button>
       </div>
     </section>
     <section class="list-section">

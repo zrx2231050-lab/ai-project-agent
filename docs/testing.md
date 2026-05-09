@@ -17,6 +17,7 @@ The test command covers:
 - RAG intent, citations, and confidence.
 - Model fallback behavior.
 - Project brief generation.
+- Word `.docx` extraction and ingest workflow.
 
 The app can be started with:
 
